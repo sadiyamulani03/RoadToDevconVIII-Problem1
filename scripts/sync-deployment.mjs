@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 const here = dirname(fileURLToPath(import.meta.url))
 const chainId = process.argv[2] ?? '84532'
 const deploymentPath = join(here, '..', 'deployments', `${chainId}.json`)
-const outPath = join(here, 'frontend', 'src', 'config', 'deployment.generated.ts')
+const outPath = join(here, '..', 'frontend', 'src', 'config', 'deployment.generated.ts')
 
 if (!existsSync(deploymentPath)) {
   console.error(`No deployment metadata at ${deploymentPath}. Deploy first.`)

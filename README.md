@@ -99,16 +99,18 @@ phone or computer. There is no game server, no accounts, and no custody.
 | Network | Base Sepolia |
 | Chain id | **84532** |
 | Explorer | <https://sepolia.basescan.org> |
-| Contract address | *Not yet deployed from this machine — see §10.* |
-| Live frontend URL | *Not yet published — see §11.* |
+| Contract address | [`0xF6D0D208f9841bb406ee43D07e437eb61e42bB81`](https://sepolia.basescan.org/address/0xF6D0D208f9841bb406ee43D07e437eb61e42bB81) |
+| Deployment tx | [`0x89562617…`](https://sepolia.basescan.org/tx/0x8956261717d2aeaa2e1c32f58489319bb8b91602b447998ca1501ce9d28361b6) (block 47943261) |
+| Live frontend URL | <https://sadiyamulani03.github.io/RoadToDevconVIII-Problem1/> |
 
-This repository ships the complete, tested implementation and a reproducible
-deployment pipeline, but **no contract address is claimed here because no
-Base Sepolia deployment transaction has been made with an authorized key**.
-After you run the deployment in §10, the address is recorded in
-`deployments/84532.json`, synced into the frontend by
-`npm run sync-deployment`, and should be filled into this table together with
-the Basescan links.
+The contract was deployed from this repository's reproducible pipeline
+(`script/Deploy.s.sol`, chain-id guarded to 84532) and the metadata is
+recorded in `deployments/84532.json`. The frontend build carries the same
+address via `npm run sync-deployment`, which writes
+`frontend/src/config/deployment.generated.ts`. An end-to-end smoke test on
+the live contract verified game creation, joining, turn enforcement
+(`NotYourTurn` for the out-of-turn player), legal piece gravity, board
+state, and turn hand-off.
 
 ## 5. Prerequisites
 
@@ -261,9 +263,12 @@ Then publish `dist/` with your host of choice, for example:
   directory, build command `npm run build`, output directory `dist`.
 - **GitHub Pages:** upload `dist/` (hash routes need no server rewrites).
 
-No deployment credentials for a hosting provider are present in this
-environment, so no live URL is claimed in §4. After publishing, add the URL
-there. Set `VITE_CONTRACT_ADDRESS` (or run `npm run sync-deployment` before
+The repository deploys the frontend automatically to **GitHub Pages** via
+`.github/workflows/deploy-frontend.yml`: every push to `main` runs
+`npm ci && npm run build` in `frontend/` and publishes `dist/` with the
+official Pages actions. Any static host works too — point it at
+`frontend/`, build command `npm run build`, output directory `dist`, and
+set `VITE_CONTRACT_ADDRESS` (or run `npm run sync-deployment` before
 building) so the published build knows the contract.
 
 ## 12. Wallet setup & test ETH
@@ -374,10 +379,10 @@ wallet.
 
 ## 18. Known limitations
 
-- **Deployment/publishing pending:** contract and frontend deployment need
-  your funded testnet key and hosting credentials; the pipeline is verified
-  locally (see §10) but no mainnet-of-testnet transaction has been broadcast
-  from this environment, so §4 intentionally lists no address.
+- **Source not yet verified on Basescan:** the deployment broadcast did not
+  include `--verify` (no Etherscan API key in this environment), so the
+  contract currently appears as "unverified" on the explorer. Run
+  `forge verify-contract` with an API key to publish the source.
 - **Abandoned open games:** a game still `WaitingForOpponent` whose creator
   leaves can never be forfeited (the only participant is on turn), so it
   simply stays joinable forever. This is harmless — a stranger joining it is
