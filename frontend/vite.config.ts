@@ -12,6 +12,9 @@ import { defineConfig } from 'vite'
 const optionalStub = fileURLToPath(new URL('./src/lib/optionalDepsStub.ts', import.meta.url))
 
 export default defineConfig({
+  // Relative asset paths so the build works from any subpath
+  // (e.g. GitHub Pages project sites) as well as a domain root.
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
